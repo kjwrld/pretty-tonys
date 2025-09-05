@@ -2,6 +2,8 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, Center, Html, useProgress } from "@react-three/drei";
 import { Suspense, useState, useEffect, useRef } from "react";
 import Stats from "stats.js";
+import { DRACOLoader } from "three-stdlib";
+import { GLTFLoader } from "three-stdlib";
 import PoloModel from "./models/PoloModel";
 import SceneLights from "./SceneLights";
 import SmoothCameraControls from "./SmoothCameraControls";
@@ -94,6 +96,7 @@ function PerformanceStats() {
 }
 
 export default function Scene() {
+
     // Centralized state management
     const [lightSettings, setLightSettings] = useState({
         pointLight: {
@@ -103,7 +106,7 @@ export default function Scene() {
         },
         ambientIntensity: 0.8,
         directionalIntensity: 1,
-        backgroundColor: "#e1ebfb",
+        backgroundColor: "#ffffff",
     });
 
     const [cameraSettings, setCameraSettings] = useState({
@@ -120,6 +123,7 @@ export default function Scene() {
         position: { x: 0, y: -1.2, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
     });
+
 
     return (
         <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
@@ -139,11 +143,20 @@ export default function Scene() {
                 camera={{ position: [0, 1, 5], fov: 12 }}
                 shadows
                 gl={{ antialias: true, alpha: false }}
+                onCreated={({ gl }) => {
+                    // Set up Draco loader for the scene
+                    const dracoLoader = new DRACOLoader();
+                    dracoLoader.setDecoderPath('/draco/');
+                    dracoLoader.setDecoderConfig({ type: 'js' });
+                    
+                    // Store globally for useGLTF
+                    (window as any).dracoLoader = dracoLoader;
+                }}
             >
                 <SmoothCameraControls cameraSettings={cameraSettings} />
                 <Suspense fallback={<Loader />}>
                     <Environment preset="studio" />
-                    <SceneLights lightSettings={lightSettings} />
+                    {/* <SceneLights lightSettings={lightSettings} /> */}
                     <Center>
                         <PoloModel modelSettings={modelSettings} />
                     </Center>

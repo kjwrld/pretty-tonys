@@ -34,6 +34,7 @@ interface CentralizedGUIProps {
     rotation: { x: number; y: number; z: number };
   };
   onModelChange: (settings: any) => void;
+
 }
 
 export default function CentralizedGUI({
@@ -54,14 +55,51 @@ export default function CentralizedGUI({
     gui.domElement.style.right = '10px';
     gui.domElement.style.zIndex = '1000';
     guiRef.current = gui;
+    
+    // Create a mutable reference object for GUI to work with
+    const settings = {
+      // Light settings
+      pointLightIntensity: lightSettings.pointLight.intensity,
+      pointLightX: lightSettings.pointLight.position[0],
+      pointLightY: lightSettings.pointLight.position[1],
+      pointLightZ: lightSettings.pointLight.position[2],
+      pointLightColor: lightSettings.pointLight.color,
+      ambientIntensity: lightSettings.ambientIntensity,
+      directionalIntensity: lightSettings.directionalIntensity,
+      backgroundColor: lightSettings.backgroundColor,
+      
+      // Camera settings
+      basePositionX: cameraSettings.basePosition.x,
+      basePositionY: cameraSettings.basePosition.y,
+      basePositionZ: cameraSettings.basePosition.z,
+      sensitivityX: cameraSettings.sensitivity.x,
+      sensitivityY: cameraSettings.sensitivity.y,
+      lookAtTargetX: cameraSettings.lookAtTarget.x,
+      lookAtTargetY: cameraSettings.lookAtTarget.y,
+      lookAtTargetZ: cameraSettings.lookAtTarget.z,
+      lerpFactor: cameraSettings.lerpFactor,
+      fov: cameraSettings.fov,
+      enableMouseControl: cameraSettings.enableMouseControl,
+      
+      // Model settings
+      modelScale: modelSettings.scale,
+      modelPositionX: modelSettings.position.x,
+      modelPositionY: modelSettings.position.y,
+      modelPositionZ: modelSettings.position.z,
+      modelRotationX: modelSettings.rotation.x,
+      modelRotationY: modelSettings.rotation.y,
+      modelRotationZ: modelSettings.rotation.z,
+    };
 
     // === LIGHTING CONTROLS ===
+    /*
     const lightFolder = gui.addFolder('Lighting');
     
     // Point Light
     const pointLightFolder = lightFolder.addFolder('Point Light');
     pointLightFolder
-      .add(lightSettings.pointLight, 'intensity', 0, 5, 0.1)
+      .add(settings, 'pointLightIntensity', 0, 5, 0.1)
+      .name('Intensity')
       .onChange((value: number) => {
         onLightChange({
           ...lightSettings,
@@ -70,7 +108,7 @@ export default function CentralizedGUI({
       });
     
     pointLightFolder
-      .add(lightSettings.pointLight.position, '0', -10, 10, 0.1)
+      .add(settings, 'pointLightX', -10, 10, 0.1)
       .name('X Position')
       .onChange((value: number) => {
         const newPosition: [number, number, number] = [
@@ -85,7 +123,7 @@ export default function CentralizedGUI({
       });
       
     pointLightFolder
-      .add(lightSettings.pointLight.position, '1', -10, 10, 0.1)
+      .add(settings, 'pointLightY', -10, 10, 0.1)
       .name('Y Position')
       .onChange((value: number) => {
         const newPosition: [number, number, number] = [
@@ -100,7 +138,7 @@ export default function CentralizedGUI({
       });
       
     pointLightFolder
-      .add(lightSettings.pointLight.position, '2', -10, 10, 0.1)
+      .add(settings, 'pointLightZ', -10, 10, 0.1)
       .name('Z Position')
       .onChange((value: number) => {
         const newPosition: [number, number, number] = [
@@ -115,7 +153,8 @@ export default function CentralizedGUI({
       });
       
     pointLightFolder
-      .addColor(lightSettings.pointLight, 'color')
+      .addColor(settings, 'pointLightColor')
+      .name('Color')
       .onChange((value: string) => {
         onLightChange({
           ...lightSettings,
@@ -125,24 +164,28 @@ export default function CentralizedGUI({
 
     // Other Lights
     lightFolder
-      .add(lightSettings, 'ambientIntensity', 0, 2, 0.1)
+      .add(settings, 'ambientIntensity', 0, 2, 0.1)
+      .name('Ambient Intensity')
       .onChange((value: number) => {
         onLightChange({ ...lightSettings, ambientIntensity: value });
       });
       
     lightFolder
-      .add(lightSettings, 'directionalIntensity', 0, 3, 0.1)
+      .add(settings, 'directionalIntensity', 0, 3, 0.1)
+      .name('Directional Intensity')
       .onChange((value: number) => {
         onLightChange({ ...lightSettings, directionalIntensity: value });
       });
       
     lightFolder
-      .addColor(lightSettings, 'backgroundColor')
+      .addColor(settings, 'backgroundColor')
+      .name('Background Color')
       .onChange((value: string) => {
         onLightChange({ ...lightSettings, backgroundColor: value });
       });
 
     lightFolder.open();
+    */
 
     // === CAMERA CONTROLS ===
     const cameraFolder = gui.addFolder('Camera');
@@ -319,6 +362,7 @@ export default function CentralizedGUI({
       });
 
     modelFolder.open();
+
 
     // Cleanup
     return () => {
