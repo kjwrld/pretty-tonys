@@ -1,4 +1,4 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, Center, Html, useProgress } from "@react-three/drei";
 import { Suspense, useState, useEffect, useRef } from "react";
 import Stats from "stats.js";
@@ -8,6 +8,7 @@ import PoloModel from "./models/PoloModel";
 import SceneLights from "./SceneLights";
 import SmoothCameraControls from "./SmoothCameraControls";
 import CentralizedGUI from "./CentralizedGUI";
+import * as THREE from "three";
 
 // Loading component
 function Loader() {
@@ -28,7 +29,7 @@ function Loader() {
         <Html center>
             <div
                 style={{
-                    color: "white",
+                    color: "black",
                     fontSize: "24px",
                     fontFamily: "Arial, sans-serif",
                     textAlign: "center",
@@ -58,6 +59,17 @@ function Loader() {
             </div>
         </Html>
     );
+}
+
+// Background color updater component
+function BackgroundUpdater({ backgroundColor }: { backgroundColor: string }) {
+    const { gl } = useThree();
+    
+    useEffect(() => {
+        gl.setClearColor(new THREE.Color(backgroundColor));
+    }, [gl, backgroundColor]);
+    
+    return null;
 }
 
 // Performance stats component
@@ -143,6 +155,7 @@ export default function Scene() {
                 camera={{ position: [0, 1, 5], fov: 12 }}
                 shadows
                 gl={{ antialias: true, alpha: false }}
+                style={{ backgroundColor: lightSettings.backgroundColor }}
                 onCreated={({ gl }) => {
                     // Set up Draco loader for the scene
                     const dracoLoader = new DRACOLoader();
@@ -151,8 +164,12 @@ export default function Scene() {
                     
                     // Store globally for useGLTF
                     (window as any).dracoLoader = dracoLoader;
+                    
+                    // Set initial background color
+                    gl.setClearColor(lightSettings.backgroundColor);
                 }}
             >
+                <BackgroundUpdater backgroundColor={lightSettings.backgroundColor} />
                 <SmoothCameraControls cameraSettings={cameraSettings} />
                 <Suspense fallback={<Loader />}>
                     <Environment preset="studio" />

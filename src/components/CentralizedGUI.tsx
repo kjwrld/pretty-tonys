@@ -91,101 +91,19 @@ export default function CentralizedGUI({
       modelRotationZ: modelSettings.rotation.z,
     };
 
-    // === LIGHTING CONTROLS ===
-    /*
-    const lightFolder = gui.addFolder('Lighting');
+    // === BACKGROUND CONTROLS ===
+    const backgroundFolder = gui.addFolder('Background');
     
-    // Point Light
-    const pointLightFolder = lightFolder.addFolder('Point Light');
-    pointLightFolder
-      .add(settings, 'pointLightIntensity', 0, 5, 0.1)
-      .name('Intensity')
-      .onChange((value: number) => {
-        onLightChange({
-          ...lightSettings,
-          pointLight: { ...lightSettings.pointLight, intensity: value }
-        });
-      });
-    
-    pointLightFolder
-      .add(settings, 'pointLightX', -10, 10, 0.1)
-      .name('X Position')
-      .onChange((value: number) => {
-        const newPosition: [number, number, number] = [
-          value,
-          lightSettings.pointLight.position[1],
-          lightSettings.pointLight.position[2]
-        ];
-        onLightChange({
-          ...lightSettings,
-          pointLight: { ...lightSettings.pointLight, position: newPosition }
-        });
-      });
-      
-    pointLightFolder
-      .add(settings, 'pointLightY', -10, 10, 0.1)
-      .name('Y Position')
-      .onChange((value: number) => {
-        const newPosition: [number, number, number] = [
-          lightSettings.pointLight.position[0],
-          value,
-          lightSettings.pointLight.position[2]
-        ];
-        onLightChange({
-          ...lightSettings,
-          pointLight: { ...lightSettings.pointLight, position: newPosition }
-        });
-      });
-      
-    pointLightFolder
-      .add(settings, 'pointLightZ', -10, 10, 0.1)
-      .name('Z Position')
-      .onChange((value: number) => {
-        const newPosition: [number, number, number] = [
-          lightSettings.pointLight.position[0],
-          lightSettings.pointLight.position[1],
-          value
-        ];
-        onLightChange({
-          ...lightSettings,
-          pointLight: { ...lightSettings.pointLight, position: newPosition }
-        });
-      });
-      
-    pointLightFolder
-      .addColor(settings, 'pointLightColor')
-      .name('Color')
-      .onChange((value: string) => {
-        onLightChange({
-          ...lightSettings,
-          pointLight: { ...lightSettings.pointLight, color: value }
-        });
-      });
-
-    // Other Lights
-    lightFolder
-      .add(settings, 'ambientIntensity', 0, 2, 0.1)
-      .name('Ambient Intensity')
-      .onChange((value: number) => {
-        onLightChange({ ...lightSettings, ambientIntensity: value });
-      });
-      
-    lightFolder
-      .add(settings, 'directionalIntensity', 0, 3, 0.1)
-      .name('Directional Intensity')
-      .onChange((value: number) => {
-        onLightChange({ ...lightSettings, directionalIntensity: value });
-      });
-      
-    lightFolder
+    backgroundFolder
       .addColor(settings, 'backgroundColor')
       .name('Background Color')
       .onChange((value: string) => {
         onLightChange({ ...lightSettings, backgroundColor: value });
+        // Also update the canvas background color immediately
+        document.body.style.backgroundColor = value;
       });
 
-    lightFolder.open();
-    */
+    backgroundFolder.open();
 
     // === CAMERA CONTROLS ===
     const cameraFolder = gui.addFolder('Camera');
